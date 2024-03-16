@@ -15,7 +15,7 @@ export class CoffeesService {
   async findAll(): Promise<Coffee[]> {
     return await this.coffeeRepository.find();
   }
-  async findOne(id: string): Promise<Coffee> {
+  async findOne(id: number): Promise<Coffee> {
     const coffee = await this.coffeeRepository.findOne({ where: { id } });
     console.log('id', id);
     if (!coffee) {
@@ -31,9 +31,9 @@ export class CoffeesService {
     }
   }
 
-  async update(id: string, dto: UpdateCoffeeDto) {
+  async update(id: number, dto: UpdateCoffeeDto) {
     const coffee = await this.coffeeRepository.preload({
-      id,
+      id: +id,
       ...dto,
     });
     if (!coffee) {
@@ -42,8 +42,13 @@ export class CoffeesService {
     return this.coffeeRepository.save(coffee);
   }
 
-  async remove(id: string) {
+  async remove(id: number) {
     const coffee = await this.coffeeRepository.findOne({ where: { id } });
-    return this.coffeeRepository.remove(coffee);
+    if (!coffee) {
+      throw new NotFoundException(`Coffee #${id} was not find`);
+    }
+    if (coffee) {
+      return this.coffeeRepository.remove(coffee);
+    }
   }
 }
