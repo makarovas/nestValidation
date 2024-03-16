@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
+import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { Coffee } from './entities/coffee.entity';
 
 @Injectable()
@@ -31,14 +32,25 @@ export class CoffeesService {
     return coffee;
   }
 
-  create(dto: CreateCoffeeDto): void {
+  create(dto: CreateCoffeeDto): CreateCoffeeDto {
     const { id, name, brand } = dto;
-    const ifExist = this.findOne(id);
+    const coffee = this.coffees.find((coffee) => coffee.id === id);
 
-    if (!ifExist) {
+    if (!coffee) {
       this.coffees.push({ id, name, brand });
     }
+    return dto;
   }
+  update(id: string, dto: UpdateCoffeeDto) {
+    const { name, brand } = dto;
+    const ifExist = this.findOne(id);
+
+    if (ifExist) {
+      this.coffees.push({ id, name, brand });
+    }
+    console.log(this.coffees, 50);
+  }
+
   remove(id: string): void {
     const indexToDelete = this.coffees.findIndex((item) => {
       return item.id === id;
