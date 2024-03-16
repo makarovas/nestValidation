@@ -5,23 +5,6 @@ import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
 import { Coffee } from './entities/coffee.entity';
 
-export const coffees: Coffee[] = [
-  { id: '1', name: 'coca', brand: 'cola' },
-  { id: '2', name: 'rabusta', brand: 'poland', flavors: ['orange', 'red'] },
-  {
-    id: '3',
-    name: 'latte',
-    brand: 'motherRussia',
-    flavors: ['orange', 'red'],
-  },
-  {
-    id: '4',
-    name: 'latte',
-    brand: 'motherRussia1',
-    flavors: ['orange', 'red'],
-  },
-];
-
 @Injectable()
 export class CoffeesService {
   constructor(
@@ -34,6 +17,7 @@ export class CoffeesService {
   }
   async findOne(id: string): Promise<Coffee> {
     const coffee = await this.coffeeRepository.findOne({ where: { id } });
+    console.log('id', id);
     if (!coffee) {
       throw new NotFoundException(`Coffee #${id} was not found`);
     }
